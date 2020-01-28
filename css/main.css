@@ -1,0 +1,11 @@
+.glyphicon {
+    margin-right: 20px;
+}
+
+.err {
+    color: red;
+}
+
+.success {
+    color: #1e7e34;
+}
