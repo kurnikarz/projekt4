@@ -1,5 +1,5 @@
 
-<?php/*
+<?php
     session_start();
 
     if (isset($_SESSION['zaktualizowano'])) {
@@ -49,29 +49,29 @@
 
                     require_once 'database.php';
                     echo '<table class="table table-hover">';
-                    if ($result = $connect->query("DESCRIBE filmy")) {
-                        echo '<thead>';
-                        echo '<tr>';
-                        while ($row = $result->fetch_assoc()) {
-                            echo '<th scope="col">'.$row['Field'].'</th>';
-                        }
+                    $sql = "DESCRIBE filmy";
+                    $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                    echo '<thead>';
+                    echo '<tr>';
+                    foreach ($dbh->query($sql) as $row) {
+                        echo '<th scope="col">'.$row['Field'].'</th>';
                     }
                 echo '<th scope="col">Operacje</th>';
                 echo '</thead>';
                 echo '</tr>';
                         echo '<tbody>';
-                        if ($result = $connect->query("SELECT * FROM filmy")) {
-                            while ($row = $result->fetch_assoc()) {
-                                echo '<tr>';
-                                echo '<td>'.$row['idFilm'].'</td>';
-                                echo '<td>'.$row['nazwa'].'</td>';
-                                echo '<td>'.$row['rezyser'].'</td>';
-                                echo '<td>'.$row['cena'].'</td>';
-                                echo '<td><a data-toggle="tooltip" data-placement="top" title="Przeglądaj" class="glyphicon glyphicon-search" href="read-film.php?idFilm='.$row['idFilm'].'"></a>';
-                                echo '<a data-toggle="tooltip" data-placement="top" title="Aktualizuj" class="glyphicon glyphicon-edit" href="update-film.php?idFilm='.$row['idFilm'].'"></a>';
-                                echo '<a data-toggle="tooltip" data-placement="top" title="Usuń" class="glyphicon glyphicon-trash" href="delete.php?idFilm='.$row['idFilm'].'"></a></td>';
-                                echo '</tr>';
-                            }
+                        $sql = "SELECT * FROM filmy";
+                        $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                        foreach ($dbh->query($sql) as $row) {
+                            echo '<tr>';
+                            echo '<td>'.$row['idFilm'].'</td>';
+                            echo '<td>'.$row['nazwa'].'</td>';
+                            echo '<td>'.$row['rezyser'].'</td>';
+                            echo '<td>'.$row['cena'].'</td>';
+                            echo '<td><a data-toggle="tooltip" data-placement="top" title="Przeglądaj" class="glyphicon glyphicon-search" href="read-film.php?idFilm='.$row['idFilm'].'"></a>';
+                            echo '<a data-toggle="tooltip" data-placement="top" title="Aktualizuj" class="glyphicon glyphicon-edit" href="update-film.php?idFilm='.$row['idFilm'].'"></a>';
+                            echo '<a data-toggle="tooltip" data-placement="top" title="Usuń" class="glyphicon glyphicon-trash" href="delete.php?idFilm='.$row['idFilm'].'"></a></td>';
+                            echo '</tr>';
                         }
                         echo '</tbody>';
                         echo '</table>';
@@ -92,35 +92,34 @@
 
         require_once 'database.php';
         echo '<table class="table table-hover">';
-        if ($result = $connect->query("DESCRIBE zamowienia")) {
-            echo '<thead>';
-            echo '<tr>';
-            while ($row = $result->fetch_assoc()) {
-                echo '<th scope="col">'.$row['Field'].'</th>';
-            }
+        $sql = "DESCRIBE zamowienia";
+        $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        echo '<thead>';
+        echo '<tr>';
+        foreach ($dbh->query($sql) as $row) {
+            echo '<th scope="col">'.$row['Field'].'</th>';
         }
         echo '<th scope="col">Operacje</th>';
         echo '</thead>';
         echo '</tr>';
         echo '<tbody>';
-        if ($result = $connect->query("SELECT * FROM zamowienia")) {
-            while ($row = $result->fetch_assoc()) {
-                echo '<tr>';
-                echo '<td>'.$row['idZamowienia'].'</td>';
-                echo '<td>'.$row['idFilm'].'</td>';
-                echo '<td>'.$row['dataZamowienia'].'</td>';
-                echo '<td>'.$row['dataWygasniecia'].'</td>';
-                echo '<td>'.$row['ilosc'].'</td>';
-                echo '<td><a data-toggle="tooltip" data-placement="top" title="Przeglądaj" class="glyphicon glyphicon-search" href="read-zam.php?idZamowienia='.$row['idZamowienia'].'"></a>';
-                echo '<a data-toggle="tooltip" data-placement="top" title="Aktualizuj" class="glyphicon glyphicon-edit" href="update-zam.php?idZamowienia='.$row['idZamowienia'].'"></a>';
-                echo '<a data-toggle="tooltip" data-placement="top" title="Usuń" class="glyphicon glyphicon-trash" href="delete-zam.php?idZamowienia='.$row['idZamowienia'].'"></a></td>';
-                echo '</tr>';
-            }
+        $sql = "SELECT * FROM zamowienia";
+        $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        foreach ($dbh->query($sql) as $row) {
+            echo '<tr>';
+            echo '<td>'.$row['idZamowienia'].'</td>';
+            echo '<td>'.$row['idFilm'].'</td>';
+            echo '<td>'.$row['dataZamowienia'].'</td>';
+            echo '<td>'.$row['dataWygasniecia'].'</td>';
+            echo '<td>'.$row['ilosc'].'</td>';
+            echo '<td><a data-toggle="tooltip" data-placement="top" title="Przeglądaj" class="glyphicon glyphicon-search" href="read-zam.php?idZamowienia='.$row['idZamowienia'].'"></a>';
+            echo '<a data-toggle="tooltip" data-placement="top" title="Aktualizuj" class="glyphicon glyphicon-edit" href="update-zam.php?idZamowienia='.$row['idZamowienia'].'"></a>';
+            echo '<a data-toggle="tooltip" data-placement="top" title="Usuń" class="glyphicon glyphicon-trash" href="delete-zam.php?idZamowienia='.$row['idZamowienia'].'"></a></td>';
+            echo '</tr>';
         }
         echo '</tbody>';
         echo '</table>';
-        */?>
-<!--
+        ?>
         </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
@@ -128,4 +127,3 @@
     <script src="js/main.js"></script>
 </body>
 </html>
--->

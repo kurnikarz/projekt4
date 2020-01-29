@@ -1,12 +1,16 @@
 <?php
-    $host = 'localhost';
-    $db_Name = 's145850';
-    $db_User = 's145850';
-    $db_Pass = 'jged8QDLG6D?';
-
-    $connect = new mysqli($host,$db_User,$db_Pass,$db_Name);
-    if ($connect->connect_error) {
-        die ('Error: '.$connect->error);
-    }
-
+// DB credentials.
+define('DB_HOST','localhost');
+define('DB_USER','root');
+define('DB_PASS','');
+define('DB_NAME','s145850');
+// Establish database connection.
+try
+{
+    $dbh = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME,DB_USER, DB_PASS);
+}
+catch (PDOException $e)
+{
+    exit("Error: " . $e->getMessage());
+}
 ?>

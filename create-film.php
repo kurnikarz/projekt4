@@ -27,7 +27,9 @@
         }
 
         if ($flaga == true) {
-            $connect->query("INSERT INTO filmy VALUES ('','$nazwa','$rezyser','$cena');");
+            $sql = "INSERT INTO filmy(nazwa,rezyser,cena) VALUES (?, ?, ?)";
+            $q = $dbh->prepare($sql);
+            $q->execute(array($nazwa,$rezyser,$cena));
             $_SESSION['dodano'] = true;
             header('Location: index.php');
         }

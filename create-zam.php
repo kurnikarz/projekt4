@@ -23,7 +23,9 @@ if (isset($_POST['dataZamowienia'])) {
     }
 
     if ($flaga == true) {
-        $connect->query("INSERT INTO zamowienia VALUES ('','$idFilm','$dataZamowienia','$dataWygasniecia','$ilosc');");
+        $sql = "INSERT INTO zamowienia(idFilm,dataZamowienia,dataWygasniecia,ilosc) VALUES (?, ?, ?,?)";
+        $q = $dbh->prepare($sql);
+        $q->execute(array($idFilm,$dataZamowienia,$dataWygasniecia,$ilosc));
         $_SESSION['dodano'] = true;
         header('Location: index.php');
     }
@@ -56,11 +58,11 @@ if (isset($_POST['dataZamowienia'])) {
                     <select class="form-control" style="width: 300px;" name="idFilm" id="idFilm">
                         <option value="" disabled selected>Wybierz id filmu</option>
                         <?php
-                            if ($result = $connect->query("SELECT idFilm FROM filmy")) {
-                                while ($row = $result->fetch_assoc()) {
-                                    echo '<option value="'.$row['idFilm'].'">'.$row['idFilm'].'</option>';
-                                }
-                            }
+                        $sql = "SELECT idFilm FROM filmy";
+                        $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                        foreach ($dbh->query($sql) as $row) {
+                            echo '<option value="'.$row['idFilm'].'">'.$row['idFilm'].'</option>';
+                        }
                         ?>
                     </select>
                 </div>

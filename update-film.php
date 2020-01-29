@@ -8,13 +8,11 @@
     if ($idFilm == null)
         header('Location: index.php');
 
-    if ($result = $connect->query("SELECT * FROM filmy WHERE idFIlm = '$idFilm'")) {
-        while ($row = $result->fetch_assoc()) {
-            $tytul = $row['nazwa'];
-            $rezyser = $row['rezyser'];
-            $cena = $row['cena'];
-        }
-    }
+    $sql = "SELECT * FROM filmy WHERE idFilm = ?";
+    $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $q = $dbh->prepare($sql);
+    $q->execute(array($idFilm));
+    $data = $q->fetch(PDO::FETCH_ASSOC);
 
     if (isset($_POST['tytul'])) {
 
@@ -40,7 +38,10 @@
         }
 
         if ($flaga == true) {
-            $connect->query("UPDATE filmy SET nazwa='$nazwaa', rezyser='$rezyserr', cena='$cenaa' WHERE idFilm = '$idFilm'");
+            $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "UPDATE filmy SET nazwa = ?, rezyser = ?, cena = ? WHERE idFilm = ?";
+            $q = $dbh->prepare($sql);
+            $q->execute(array($nazwaa,$rezyserr,$cenaa,$idFilm));
             $_SESSION['zaktualizowano'] = true;
             header('Location: index.php');
         }
@@ -69,17 +70,17 @@
             <form method="post">
                 <div class="form-group">
                     <label for="tytul"><strong>Tytuł</strong></label>
-                    <input type="text" class="form-control" id="tytul" name="tytul" maxlength="50" style="width: 300px;" value="<?php echo $tytul ?>">
+                    <input type="text" class="form-control" id="tytul" name="tytul" maxlength="50" style="width: 300px;" value="<?php echo $data['nazwa'] ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="rezyser"><strong>Reżyser</strong></label>
-                    <input type="text" class="form-control" id="rezyser" name="rezyser"  maxlength="50" style="width: 300px;" value="<?php echo $rezyser ?>">
+                    <input type="text" class="form-control" id="rezyser" name="rezyser"  maxlength="50" style="width: 300px;" value="<?php echo $data['rezyser'] ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="cena"><strong>Cena</strong></label>
-                    <input type="text" class="form-control" id="cena" name="cena" maxlength="50" style="width: 300px;" value="<?php echo $cena ?>">
+                    <input type="text" class="form-control" id="cena" name="cena" maxlength="50" style="width: 300px;" value="<?php echo $data['cena'] ?>">
                 </div>
 
                 <input type="submit" class="btn btn-primary" value="Zaktualizuj rekord">

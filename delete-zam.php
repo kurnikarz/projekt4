@@ -1,17 +1,18 @@
 <?php
 session_start();
 require_once 'database.php';
-$idFilm = null;
+$idZamowienia = null;
 if (!empty($_GET['idZamowienia']))
     $idZamowienia = $_REQUEST['idZamowienia'];
 
 if ($idZamowienia == null)
     header('Location: index.php');
 
-if ($connect->query("DELETE FROM zamowienia WHERE idZamowienia='$idZamowienia'")) {
-    $_SESSION['usunieto'] = true;
-    header('Location: index.php');
-}
+$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$sql = "DELETE FROM zamowienia WHERE idZamowienia=?";
+$q = $dbh->prepare($sql);
+$q->execute(array($idZamowienia));
+$_SESSION['usunieto'] = true;
 
 ?>
 

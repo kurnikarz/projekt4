@@ -1,3 +1,23 @@
+<?php
+
+$idFilm = null;
+if (!empty($_GET['idFilm']))
+    $idFilm = $_REQUEST['idFilm'];
+
+if ($idFilm == null)
+    header('Location: index.php');
+
+
+else {
+    require_once 'database.php';
+    $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $sql = "SELECT * FROM filmy where idFilm = ?";
+    $q = $dbh->prepare($sql);
+    $q->execute(array($idFilm));
+    $data = $q->fetch(PDO::FETCH_ASSOC);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -7,86 +27,47 @@
 </head>
 <body>
 <div class="container">
-    <div class="row">
-        <h1>Przeglądaj</h1>
-    </div>
+    <div class="span10 offset1">
+        <div class="row">
+            <h3>Dane filmu</h3>
+        </div>
 
-    <?php
-
-        $idFilm = null;
-        if (!empty($_GET['idFilm']))
-            $idFilm = $_REQUEST['idFilm'];
-
-        if ($idFilm == null)
-            header('Location: index.php');
-
-
-
-        require_once 'database.php';
-        echo '<table class="table table-hover">';
-        if ($result = $connect->query("DESCRIBE filmy")) {
-            echo '<thead>';
-            echo '<tr>';
-            while ($row = $result->fetch_assoc()) {
-                echo '<th scope="col">'.$row['Field'].'</th>';
-            }
-        }
-        echo '</thead>';
-        echo '</tr>';
-        echo '<br>';
-        echo '<br>';
-        echo '<tbody>';
-        if ($result = $connect->query("SELECT * FROM filmy WHERE idFilm = '$idFilm'")) {
-            while($row = $result->fetch_assoc()) {
-                echo '<tr>';
-                echo '<td>'.$row['idFilm'].'</td>';
-                echo '<td>'.$row['nazwa'].'</td>';
-                echo '<td>'.$row['rezyser'].'</td>';
-                echo '<td>'.$row['cena'].'</td>';
-            }
-
-        }
-    echo '</tbody>';
-    echo '</table>';
-    echo '<br>';
-
-
-
-    ?>
-<br>
-<div class="row">
-    <?php
-    echo '<table class="table table-hover">';
-    if ($result = $connect->query("DESCRIBE zamowienia")) {
-        echo '<thead>';
-        echo '<tr>';
-        while ($row = $result->fetch_assoc()) {
-            echo '<th scope="col">'.$row['Field'].'</th>';
-        }
-    }
-    echo '</thead>';
-    echo '</tr>';
-    echo '<h3>Zamówienia dla tego filmu</h3>';
-    echo '<tbody>';
-    if ($result = $connect->query("SELECT idZamowienia, filmy.idFilm, dataZamowienia, dataWygasniecia, ilosc, suma FROM filmy LEFT JOIN zamowienia ON filmy.idFilm = zamowienia.idFilm WHERE filmy.Idfilm = '$idFilm'")) {
-        while($row = $result->fetch_assoc()) {
-            echo '<tr>';
-            echo '<td>'.$row['idZamowienia'].'</td>';
-            echo '<td>'.$row['idFilm'].'</td>';
-            echo '<td>'.$row['dataZamowienia'].'</td>';
-            echo '<td>'.$row['dataWygasniecia'].'</td>';
-            echo '<td>'.$row['ilosc'].'</td>';
-            echo '<td>'.$row['suma'].'</td>';
-        }
-
-    }
-    echo '</tbody>';
-    echo '</tr>';
-    echo '</table>';
-    echo '<a class="btn btn-primary" href="index.php">Powrót</a>';
-    ?>
+        <div class="form-group row">
+            <label class="col-sm-3 control-label">Id filmu</label>
+            <div class="col-sm-3">
+                <label class="form-control" style="width: 400px;">
+                    <?php echo $data['idFilm'];?>
+                </label>
+            </div>
+        </div>
+        <div class="control-group row">
+            <label class=" col-sm-3 control-label">Tytuł</label>
+            <div class="col-sm-3">
+                <label class="form-control" style="width: 400px;">
+                    <?php echo $data['nazwa'];?>
+                </label>
+            </div>
+        </div>
+        <div class="control-group row">
+            <label class="col-sm-3 control-label">Reżyser</label>
+            <div class="col-sm-3">
+                <label class="form-control" style="width: 400px;">
+                    <?php echo $data['rezyser'];?>
+                </label>
+            </div>
+        </div>
+        <div class="control-group row">
+            <label class="col-sm-3 control-label">cena</label>
+            <div class="col-sm-3">
+                <label class="form-control" style="width: 400px;">
+                    <?php echo $data['cena'];?>
+                </label>
+            </div>
+        </div>
+        <div class="form-actions">
+            <a class="btn btn-info" href="index.php">Cofnij</a>
+        </div>
 </div>
-</div>
-<link rel="stylesheet" href="js/bootstrap.min.js">
+    <script src="js/bootstrap.min.js"></script>
 </body>
 </html>

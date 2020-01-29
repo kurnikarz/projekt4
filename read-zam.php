@@ -1,3 +1,23 @@
+<?php
+
+$idZamowienia = null;
+if (!empty($_GET['idZamowienia']))
+    $idZamowienia = $_REQUEST['idZamowienia'];
+
+if ($idZamowienia == null)
+    header('Location: index.php');
+
+
+else {
+    require_once 'database.php';
+    $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $sql = "SELECT * FROM zamowienia where idZamowienia = ?";
+    $q = $dbh->prepare($sql);
+    $q->execute(array($idZamowienia));
+    $data = $q->fetch(PDO::FETCH_ASSOC);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -8,55 +28,53 @@
 <body>
 <div class="container">
     <div class="row">
-        <h1>Przeglądaj</h1>
+        <h3>Dane zamówienia</h3>
     </div>
 
-    <?php
-
-    $idZamowienia = null;
-    if (!empty($_GET['idZamowienia']))
-        $idZamowienia = $_REQUEST['idZamowienia'];
-
-    if ($idZamowienia == null)
-        header('Location: index.php');
-
-
-
-    require_once 'database.php';
-    echo '<table class="table table-hover">';
-    if ($result = $connect->query("DESCRIBE zamowienia")) {
-        echo '<thead>';
-        echo '<tr>';
-        while ($row = $result->fetch_assoc()) {
-            echo '<th scope="col">'.$row['Field'].'</th>';
-        }
-    }
-    echo '</thead>';
-    echo '</tr>';
-    echo '<br>';
-    echo '<br>';
-    echo '<tbody>';
-    if ($result = $connect->query("SELECT * FROM zamowienia WHERE idZamowienia = '$idZamowienia'")) {
-        while($row = $result->fetch_assoc()) {
-            echo '<tr>';
-            echo '<td>'.$row['idZamowienia'].'</td>';
-            echo '<td>'.$row['idFilm'].'</td>';
-            echo '<td>'.$row['dataZamowienia'].'</td>';
-            echo '<td>'.$row['dataWygasniecia'].'</td>';
-            echo '<td>'.$row['suma'].'</td>';
-            echo '<td>'.$row['ilosc'].'</td>';
-            echo '</tr>';
-        }
-
-    }
-    echo '</tbody>';
-    echo '</table>';
-    echo '<br>';
-    echo '<a class="btn btn-primary" href="index.php">Powrót</a>';
-
-
-    ?>
+    <div class="form-group row">
+        <label class="col-sm-3 control-label">ID zamówienia</label>
+        <div class="col-sm-3">
+            <label class="form-control" style="width: 400px;">
+                <?php echo $data['idZamowienia'];?>
+            </label>
+        </div>
+    </div>
+    <div class="control-group row">
+        <label class=" col-sm-3 control-label">ID filmu</label>
+        <div class="col-sm-3">
+            <label class="form-control" style="width: 400px;">
+                <?php echo $data['idFilm'];?>
+            </label>
+        </div>
+    </div>
+    <div class="control-group row">
+        <label class="col-sm-3 control-label">data zamówienia</label>
+        <div class="col-sm-3">
+            <label class="form-control" style="width: 400px;">
+                <?php echo $data['dataZamowienia'];?>
+            </label>
+        </div>
+    </div>
+    <div class="control-group row">
+        <label class="col-sm-3 control-label">data wygaśnięcia</label>
+        <div class="col-sm-3">
+            <label class="form-control" style="width: 400px;">
+                <?php echo $data['dataWygasniecia'];?>
+            </label>
+        </div>
+    </div>
+    <div class="control-group row">
+        <label class="col-sm-3 control-label">ilość</label>
+        <div class="col-sm-3">
+            <label class="form-control" style="width: 400px;">
+                <?php echo $data['ilosc'];?>
+            </label>
+        </div>
+    </div>
+    <div class="form-actions">
+        <a class="btn btn-info" href="index.php">Cofnij</a>
+    </div>
 </div>
-<link rel="stylesheet" href="js/bootstrap.min.js">
+<script href="js/bootstrap.min.js"></script>
 </body>
 </html>

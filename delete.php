@@ -8,10 +8,17 @@
     if ($idFilm == null)
         header('Location: index.php');
 
-    if ($connect->query("DELETE FROM filmy WHERE idFilm='$idFilm'")) {
-        $_SESSION['usunieto'] = true;
-        header('Location: index.php');
+    $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $sql = "DELETE FROM filmy WHERE idFilm=?";
+    $q = $dbh->prepare($sql);
+    try {
+        $q->execute(array($idFilm));
+    } catch (Exception $e) {
+        echo 'Rekord posaida klucz obcy! Nie można usunąć';
+        exit();
     }
+
+    $_SESSION['usunieto'] = true;
 
 ?>
 
